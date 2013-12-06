@@ -24,12 +24,12 @@ void life()
 void tapis_stop()
 {
 	// TODO to protect with mutex
-	etat_tapis = 2;
+	etat_tapis = 0;
 }
 
 void tapis_start()
 {
-	etat_tapis = 2;
+	etat_tapis = 1;
 }
 
 void tapis_finish()

@@ -14,7 +14,7 @@ pthread_t th_tapis;
 	1 : Marche
 	2 : Finis
 *************************/
-int etat_tapis;
+int etat_tapis = 0;
 
 /**
  * Initialize the conveyor belt
