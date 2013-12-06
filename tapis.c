@@ -5,7 +5,7 @@ void tapis_init()
 	pthread_create(&th_tapis,NULL,&life,NULL);
 }
 
-void life()
+void *life()
 {
 	while(etat_tapis != 2)
 	{

@@ -1,9 +1,9 @@
 #ifndef __TAPIS_H
 #define __TAPIS_H
 
-#include <stdlib>
-#include <stdio>
-#include <pthread>
+#include <stdlib.h>
+#include <stdio.h>
+#include <pthread.h>
 
 // Thread tapis
 pthread_t th_tapis;
@@ -24,7 +24,7 @@ void tapis_init();
 /**
  * Add and remove objects from the conveyor belt
  */
-void life();
+void* life();
 
 /**
  * Stop the conveyor belt
