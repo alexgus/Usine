@@ -2,16 +2,23 @@
 #define __OBJET_H
 
 #include <stdio.h>
+#include <stdlib.h>
 
-#define TYPE_1 1
-#define TYPE_2 2
-#define TYPE_3 3
-#define TYPE_4 4
-#define TYPE_5 5
-#define TYPE_6 6
+#define MATERIAL	1
+#define PRODUCT	2
+
+#define NOMP_1 1
+#define NOMP_2 2
+#define NOMP_3 3
+#define NOMP_4 4
+
+#define NOMC_1 NOMP_1
+#define NOMC_2 NOMP_2
+#define NOMC_3 NOMP_3
+#define NOMC_4 NOMP_4
 
 /**************************************
- * Object'type
+ * Object's type (MATERIAL, PRODUCT)
  *************************************/
 typedef int type_t;
 
@@ -20,10 +27,13 @@ typedef int type_t;
  *************************************/
 typedef struct
 {
-	int id;
 	type_t type;
+	int numP;
 } object_t;
 
-void infoObject(char* string, object_t *o);
+
+object_t* getNewObject(type_t type, int name);
+
+int isMaterial(object_t obj);
 
 #endif

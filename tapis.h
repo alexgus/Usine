@@ -5,8 +5,8 @@
 #include <stdio.h>
 #include <pthread.h>
 
-// Thread tapis
-pthread_t th_tapis;
+pthread_t th_tapis; 				// Thread tapis
+pthread_mutex_t etat_mutex;	// Mutex etat tapis
 
 /************************
  Etat du tapis :
@@ -16,6 +16,7 @@ pthread_t th_tapis;
 *************************/
 int etat_tapis = 0;
 
+
 /**
  * Initialize the conveyor belt
  */
@@ -24,7 +25,7 @@ void tapis_init();
 /**
  * Add and remove objects from the conveyor belt
  */
-void* life();
+void* tapisMain();
 
 /**
  * Stop the conveyor belt
@@ -40,5 +41,10 @@ void tapis_start();
  * Finish the thread
  */
 void tapis_finish();
+
+// TODO Need id for communications
+// TODO Send products -> communicates with robots for send the good materials needed
+// TODO Put materials
+// TODO Pick up finish products
 
 #endif

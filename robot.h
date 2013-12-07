@@ -9,11 +9,8 @@
  *************************************/
 typedef struct
 {
-	int id;
-	object_t *work;
-	type_t acceptedObjects;
+
 } robot_t;
 
-char* infoRobot(char *string, robot_t *r);
 
 #endif

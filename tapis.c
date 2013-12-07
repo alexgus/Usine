@@ -2,10 +2,11 @@
 
 void tapis_init()
 {
-	pthread_create(&th_tapis,NULL,&life,NULL);
+	pthread_mutex_init(&etat_mutex, NULL);
+	pthread_create(&th_tapis,NULL,&tapisMain,NULL);
 }
 
-void *life()
+void *tapisMain()
 {
 	while(etat_tapis != 2)
 	{
@@ -19,20 +20,26 @@ void *life()
 				break;
 		}
 	}
+	return 0;
 }
 
 void tapis_stop()
 {
-	// TODO to protect with mutex
+	pthread_mutex_lock(&etat_mutex);
 	etat_tapis = 0;
+	pthread_mutex_unlock(&etat_mutex);
 }
 
 void tapis_start()
 {
+	pthread_mutex_lock(&etat_mutex);
 	etat_tapis = 1;
+	pthread_mutex_unlock(&etat_mutex);
 }
 
 void tapis_finish()
 {
+	pthread_mutex_lock(&etat_mutex);
 	etat_tapis = 2;
+	pthread_mutex_unlock(&etat_mutex);
 }

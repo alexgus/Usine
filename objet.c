@@ -1,6 +1,17 @@
 #include "objet.h"
 
-void infoObject(char* string, object_t *o)
+object_t* getNewObject(type_t typeO, int nameO)
 {
-	sprintf(string, "Object [id : %d, type : %d]", o->id, o->type);
+	object_t* obj = malloc(sizeof(object_t));
+	obj->type = typeO;
+	obj->numP = nameO;
+	return obj;
 }
+
+int isMaterial(object_t obj)
+{
+	if(obj.type == MATERIAL)
+		return 1;
+	return 0;
+}
+
