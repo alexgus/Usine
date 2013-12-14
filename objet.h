@@ -6,34 +6,27 @@
 
 #define MATERIAL	1
 #define PRODUCT	2
-
-#define NOMP_1 1
-#define NOMP_2 2
-#define NOMP_3 3
-#define NOMP_4 4
-
-#define NOMC_1 NOMP_1
-#define NOMC_2 NOMP_2
-#define NOMC_3 NOMP_3
-#define NOMC_4 NOMP_4
+#define FINISH		3
 
 /**************************************
- * Object's type (MATERIAL, PRODUCT)
+ * Object's type (MATERIAL, PRODUCT, FINISH)
  *************************************/
-typedef int type_t;
+typedef int state_t;
 
 /**************************************
  * Manufacturing object's structure
  *************************************/
 typedef struct
 {
-	type_t type;
-	int numP;
+	int idP; // Product's id
+	state_t state;
 } object_t;
 
 
-object_t* getNewObject(type_t type, int name);
+object_t* getNewObject(state_t type, int id);
 
 int isMaterial(object_t obj);
+int isProduct(object_t obj);
+int isFinish(object_t obj);
 
 #endif

@@ -42,8 +42,6 @@ void tapis_start();
  */
 void tapis_finish();
 
-// TODO Need id for communications
-// TODO Send products -> communicates with robots for send the good materials needed
 // TODO Put materials
 // TODO Pick up finish products
 
