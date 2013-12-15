@@ -62,11 +62,6 @@ int waitOp();
 /**
  * List of operation
  */
-void op1(robot_t r);
-void op2(robot_t r);
-void op3(robot_t r);
-void op4(robot_t r);
-void op5(robot_t r);
-void op6(robot_t r);
+void op(int idR, int opId);
 
 #endif

@@ -5,18 +5,6 @@
  */
 int nbRobot = 0;
 
-/**
- * Operations table
- */
-void (*tabOp[])(robot_t) = { 
-									&op1,
-									&op2,
-									&op3,
-									&op4,
-									&op5,
-									&op6
-								};
-
 
 int robot_init(int place)
 {
@@ -89,7 +77,7 @@ void *robotMain(int id)
 		{
 			case 1:
 				printf("Robot en marche\n");
-				op = waitOp();
+				waitOp();
 				// Do op
 				// Switch on op
 				break;
@@ -112,32 +100,7 @@ int waitOp()
 	return 0;
 }
 
-void op1(robot_t r)
+void op(int idR, int opId)
 {
-	printf("Operation 1\n");
-}
-
-void op2(robot_t r)
-{
-	printf("Operation 2\n");
-}
-
-void op3(robot_t r)
-{
-	printf("Operation 3\n");
-}
-
-void op4(robot_t r)
-{
-	printf("Operation 4\n");
-}
-
-void op5(robot_t r)
-{
-	printf("Operation 5\n");
-}
-
-void op6(robot_t r)
-{
-	printf("Operation 6\n");
+	printf("Robot %d : Effectue l'operation %d\n",idR,opId);
 }
