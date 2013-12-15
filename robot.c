@@ -1,29 +1,109 @@
 #include "robot.h"
 
-robot_t* robot_init(int id, int place)
-{
-	robot_t* r = malloc(sizeof(robot_t));
-	r->id = id;
-	r->place = place;
-	r->stock = 0;
-	
-	pthread_mutex_init(&mutex_robot, NULL);
-	pthread_create(&th_robot[nbRobot],NULL,&robotMain,NULL);
-	nbRobot++;
+/**
+ * Nb of existing robots
+ */
+int nbRobot = 0;
 
-	return r;
+/**
+ * Operations table
+ */
+void (*tabOp[])(robot_t) = { 
+									&op1,
+									&op2,
+									&op3,
+									&op4,
+									&op5,
+									&op6
+								};
+
+
+int robot_init(int place)
+{
+	if(nbRobot < NB_ROBOT)
+	{
+		int id = nbRobot;
+
+		tabRobot[id].id = id;
+		tabRobot[id].place = place;
+		tabRobot[id].stock = 0;
+		tabRobot[id].state = 1; // Marche
+
+		pthread_mutex_init(&tabRobot[id].mutex, NULL);
+		pthread_create(&tabRobot[id].th,NULL,&robotMain,(int)id);
+
+		nbRobot++;
+
+		return id;
+	}
+	return -1;
 }
 
-void *robotMain()
+void stopRobot(int id)
 {
-	int op;
-
-	while(1)
+	if(id < NB_ROBOT)
 	{
-		op = waitOp();
-		// Do op
-		// Switch on op
+		pthread_mutex_lock(&tabRobot[id].mutex);
+		tabRobot[id].state = 0;
+		pthread_mutex_unlock(&tabRobot[id].mutex);
+
+		pthread_join(tabRobot[id].th,NULL);
 	}
+}
+
+void startRobot(int id)
+{
+	if(id < NB_ROBOT)
+	{
+		pthread_mutex_lock(&tabRobot[id].mutex);
+		tabRobot[id].state = 1;
+		pthread_mutex_unlock(&tabRobot[id].mutex);
+	}
+}
+
+void breakdownRobot(int id)
+{
+	if(id < NB_ROBOT)
+	{
+		pthread_mutex_lock(&tabRobot[id].mutex);
+		tabRobot[id].state = 2;
+		pthread_mutex_unlock(&tabRobot[id].mutex);
+	}
+}
+
+void degradeRobot(int id)
+{
+	if(id < NB_ROBOT)
+	{
+		pthread_mutex_lock(&tabRobot[id].mutex);
+		tabRobot[id].state = 3;
+		pthread_mutex_unlock(&tabRobot[id].mutex);
+	}
+}
+
+void *robotMain(int id)
+{
+	while(tabRobot[id].state)
+	{
+		switch(tabRobot[id].state)
+		{
+			case 1:
+				printf("Robot en marche\n");
+				op = waitOp();
+				// Do op
+				// Switch on op
+				break;
+			case 2:
+				printf("Robot en panne\n");
+				break;
+			case 3:
+				printf("Robot en mode dégradé\n");
+				break;
+			default:
+				printf("Robot %d : Illegal State\n",id);
+		}
+	}
+	return NULL;
 }
 
 int waitOp()
