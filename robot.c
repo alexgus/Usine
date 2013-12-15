@@ -90,6 +90,7 @@ void *robotMain(int id)
 			default:
 				printf("Robot %d : Illegal State\n",id);
 		}
+	sleep(1);
 	}
 	return NULL;
 }
@@ -97,6 +98,8 @@ void *robotMain(int id)
 int waitOp()
 {
 	// Recv msg
+	// Struct msg O:1:2 -> operation 1 sur objet type d'objet 2
+	// Struct msg G:3:2 -> recupère 3 objet de type 2
 	return 0;
 }
 

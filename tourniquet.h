@@ -9,11 +9,12 @@
 #include "objet.h"
 
 #define NBCASE			16
-#define TIME_TOURNE	2
-#define TIME_WAIT		4
+#define TIME_TOURNE	100 // ms
+#define TIME_WAIT		2		// s		
 
 object_t* tourne[NBCASE];		// Tourniquet cases
-int nbObjectsIn = 0;				// Nb objects in the tourniquet
+int nbObjectsIn;					// Nb objects in the tourniquet
+int state_tourne;					// State of the ring : 0 -> Stop | 1 -> in work 
 pthread_t th_tourne;				// Thread tourniquet
 pthread_mutex_t mutex_tourne;	// Mutex tourniquet
 
@@ -26,6 +27,11 @@ void init_tourniquet();
  * Main of the thread
  */
 void* tourneMain();
+
+/**
+ * Stop the ring
+ */
+void stop_tourne();
 
 /**
  * Rotate conveyor belt

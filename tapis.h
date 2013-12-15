@@ -14,8 +14,7 @@ pthread_mutex_t etat_mutex;	// Mutex etat tapis
 	1 : Marche
 	2 : Finis
 *************************/
-int etat_tapis = 0;
-
+int etat_tapis;
 
 /**
  * Initialize the conveyor belt

@@ -58,7 +58,6 @@ void *robotMain(int id);
  */
 int waitOp();
 
-
 /**
  * List of operation
  */

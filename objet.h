@@ -4,29 +4,25 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define MATERIAL	1
-#define PRODUCT	2
-#define FINISH		3
-
-/**************************************
- * Object's type (MATERIAL, PRODUCT, FINISH)
- *************************************/
-typedef int state_t;
+typedef enum { MATERIAL, PRODUCT, FINISH } state;
+typedef enum {C1,C2,C3,C4,P1,P2,P3,P4} typeObject;
 
 /**************************************
  * Manufacturing object's structure
  *************************************/
 typedef struct
 {
-	int idP; // Product's id
-	state_t state;
+	state etat;
+	typeObject type;
 } object_t;
 
 
-object_t* getNewObject(state_t type, int id);
+object_t* getNewObject(typeObject t);
 
 int isMaterial(object_t obj);
 int isProduct(object_t obj);
 int isFinish(object_t obj);
+
+void finishObj(object_t* obj);
 
 #endif
