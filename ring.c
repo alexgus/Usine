@@ -36,9 +36,9 @@ void ring_stop()
 void ring_spin()
 {
 	pthread_mutex_lock(&mutex_tourne);
-	printf("Tourniquet : Rotation démarée\n");
+	printf("Ring : Rotation démarée\n");
 	usleep(TIME_TOURNE);
-	printf("Tourniquet : Rotation finis\n");
+	printf("Ring : Rotation finis\n");
 	pthread_mutex_unlock(&mutex_tourne);
 }
 
