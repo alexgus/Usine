@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "robot.h"
-#include "tapis.h"
-#include "tourniquet.h"
-#include "objet.h"
+#include "scheduler.h"
+#include "ring.h"
+#include "object.h"
 
 int main(void)
 {
@@ -14,14 +14,14 @@ int main(void)
 	int r1 = robot_init(1);
 	object_t* o1 = getNewObject(C1);
 	
-	tapis_init();
-	init_tourniquet();
+	scheduler_init();
+	ring_init();
 
 	sleep(3);
 
-	stopRobot(r1);
-	tapis_finish();
-	stop_tourne();
+	robot_stop(r1);
+	scheduler_finish();
+	ring_stop();
 
 	return EXIT_SUCCESS;
 }

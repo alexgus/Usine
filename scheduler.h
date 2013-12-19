@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <pthread.h>
+#include <unistd.h>
 
 pthread_t th_tapis; 				// Thread tapis
 pthread_mutex_t etat_mutex;	// Mutex etat tapis
@@ -19,27 +20,27 @@ int etat_tapis;
 /**
  * Initialize the conveyor belt
  */
-void tapis_init();
+void scheduler_init();
 
 /**
  * Add and remove objects from the conveyor belt
  */
-void* tapisMain();
+void* scheduler_main();
 
 /**
  * Stop the conveyor belt
  */
-void tapis_stop();
+void scheduler_stop();
 
 /**
  * Start the conveyor belt
  */
-void tapis_start();
+void scheduler_start();
 
 /**
  * Finish the thread
  */
-void tapis_finish();
+void scheduler_finish();
 
 // TODO Put materials
 // TODO Pick up finish products

@@ -1,20 +1,20 @@
-#include "tourniquet.h"
+#include "ring.h"
 
-void init_tourniquet()
+void ring_init()
 {
 	nbObjectsIn = 0;
 	state_tourne = 1;
-	pthread_create(&th_tourne, NULL, &tourneMain, NULL);
+	pthread_create(&th_tourne, NULL, &ring_main, NULL);
 	pthread_mutex_init(&mutex_tourne, NULL);
 }
 
-void* tourneMain()
+void* ring_main()
 {
 	while(state_tourne)
 	{
 		if(nbObjectsIn > 0)
 		{
-			rotate();
+			ring_spin();
 			sleep(TIME_WAIT);
 		}
 		else
@@ -26,14 +26,14 @@ void* tourneMain()
 	return NULL;
 }
 
-void stop_tourne()
+void ring_stop()
 {
 	pthread_mutex_lock(&mutex_tourne);
 	state_tourne = 0;
 	pthread_mutex_unlock(&mutex_tourne);
 }
 
-void rotate()
+void ring_spin()
 {
 	pthread_mutex_lock(&mutex_tourne);
 	printf("Tourniquet : Rotation démarée\n");
@@ -42,7 +42,7 @@ void rotate()
 	pthread_mutex_unlock(&mutex_tourne);
 }
 
-object_t* getObject(int n)
+object_t* ring_getObject(int n)
 {
 	pthread_mutex_lock(&mutex_tourne);
 	object_t* obj = tourne[n];
@@ -52,7 +52,7 @@ object_t* getObject(int n)
 	return obj;
 }
 
-void putObject(int n, object_t* obj)
+void ring_putObject(int n, object_t* obj)
 {
 	if(tourne[n] == NULL)
 	{

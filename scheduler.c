@@ -1,23 +1,23 @@
-#include "tapis.h"
+#include "scheduler.h"
 
-void tapis_init()
+void scheduler_init()
 {
 	etat_tapis = 0;
 	pthread_mutex_init(&etat_mutex, NULL);
-	pthread_create(&th_tapis,NULL,&tapisMain,NULL);
+	pthread_create(&th_tapis,NULL,&scheduler_main,NULL);
 }
 
-void *tapisMain()
+void *scheduler_main()
 {
 	while(etat_tapis != 2)
 	{
 		switch(etat_tapis)
 		{
 			case 0:
-				printf("Tapis : Not in work !\n");
+				printf("scheduler : Not in work !\n");
 				break;
 			case 1:
-				printf("Tapis : In work !\n");
+				printf("scheduler : In work !\n");
 				break;
 		}
 	sleep(1);
@@ -25,21 +25,21 @@ void *tapisMain()
 	return 0;
 }
 
-void tapis_stop()
+void scheduler_stop()
 {
 	pthread_mutex_lock(&etat_mutex);
 	etat_tapis = 0;
 	pthread_mutex_unlock(&etat_mutex);
 }
 
-void tapis_start()
+void scheduler_start()
 {
 	pthread_mutex_lock(&etat_mutex);
 	etat_tapis = 1;
 	pthread_mutex_unlock(&etat_mutex);
 }
 
-void tapis_finish()
+void scheduler_finish()
 {
 	pthread_mutex_lock(&etat_mutex);
 	etat_tapis = 2;

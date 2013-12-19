@@ -6,7 +6,7 @@
 #include <pthread.h>
 #include <sys/wait.h>
 #include <unistd.h>
-#include "objet.h"
+#include "object.h"
 
 #define NBCASE			16
 #define TIME_TOURNE	100 // ms
@@ -21,31 +21,31 @@ pthread_mutex_t mutex_tourne;	// Mutex tourniquet
 /**
  * Initialize thread
  */
-void init_tourniquet();
+void ring_init();
 
 /**
  * Main of the thread
  */
-void* tourneMain();
+void* ring_main();
 
 /**
  * Stop the ring
  */
-void stop_tourne();
+void ring_stop();
 
 /**
  * Rotate conveyor belt
  */
-void rotate();
+void ring_spin();
 
 /**
  * Get objetc at position n
  */
-object_t* getObject(int n);
+object_t* ring_getObject(int n);
 
 /**
  * Put objects at position n
  */
-void putObject(int n, object_t* obj);
+void ring_putObject(int n, object_t* obj);
 
 #endif

@@ -3,7 +3,8 @@
 
 #include <stdio.h>
 #include <pthread.h>
-#include "objet.h"
+#include <unistd.h>
+#include "object.h"
 
 #define NB_ROBOT 6
 
@@ -34,33 +35,33 @@ int robot_init(int place);
 /**
  * Stop the robot, thread exit
  */
-void stopRobot(int id);
+void robot_stop(int id);
 /**
  * Start normaly the robot
  */
-void startRobot(int id);
+void robot_start(int id);
 /**
  * The robot is breakdown
  */
-void breakdownRobot(int id);
+void robot_breakdown(int id);
 /** 
  * The robot is in degrade mode
  */
-void degradeRobot(int id);
+void robot_degradeMode(int id);
 
 /**
  * Main of the robot thread
  */
-void *robotMain(int id);
+void *robot_main(int id);
 
 /**
  * Wait an operation to do
  */
-int waitOp();
+int robot_waitOp();
 
 /**
  * List of operation
  */
-void op(int idR, int opId);
+void robot_op(int idR, int opId);
 
 #endif

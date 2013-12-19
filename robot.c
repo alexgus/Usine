@@ -18,7 +18,7 @@ int robot_init(int place)
 		tabRobot[id].state = 1; // Marche
 
 		pthread_mutex_init(&tabRobot[id].mutex, NULL);
-		pthread_create(&tabRobot[id].th,NULL,&robotMain,(int)id);
+		pthread_create(&tabRobot[id].th,NULL,&robot_main,(int)id);
 
 		nbRobot++;
 
@@ -27,7 +27,7 @@ int robot_init(int place)
 	return -1;
 }
 
-void stopRobot(int id)
+void robot_stop(int id)
 {
 	if(id < NB_ROBOT)
 	{
@@ -39,7 +39,7 @@ void stopRobot(int id)
 	}
 }
 
-void startRobot(int id)
+void robot_start(int id)
 {
 	if(id < NB_ROBOT)
 	{
@@ -49,7 +49,7 @@ void startRobot(int id)
 	}
 }
 
-void breakdownRobot(int id)
+void robot_breakdown(int id)
 {
 	if(id < NB_ROBOT)
 	{
@@ -59,7 +59,7 @@ void breakdownRobot(int id)
 	}
 }
 
-void degradeRobot(int id)
+void robot_degradeMode(int id)
 {
 	if(id < NB_ROBOT)
 	{
@@ -69,7 +69,7 @@ void degradeRobot(int id)
 	}
 }
 
-void *robotMain(int id)
+void *robot_main(int id)
 {
 	while(tabRobot[id].state)
 	{
@@ -77,7 +77,7 @@ void *robotMain(int id)
 		{
 			case 1:
 				printf("Robot en marche\n");
-				waitOp();
+				robot_waitOp();
 				// Do op
 				// Switch on op
 				break;
@@ -95,7 +95,7 @@ void *robotMain(int id)
 	return NULL;
 }
 
-int waitOp()
+int robot_waitOp()
 {
 	// Recv msg
 	// Struct msg O:1:2 -> operation 1 sur objet type d'objet 2
@@ -103,7 +103,7 @@ int waitOp()
 	return 0;
 }
 
-void op(int idR, int opId)
+void robot_op(int idR, int opId)
 {
 	printf("Robot %d : Effectue l'operation %d\n",idR,opId);
 }
