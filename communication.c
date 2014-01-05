@@ -55,6 +55,7 @@ com *com_lire(int msgid)
 		exit(1);
 	}
 	printf("Message lu : %d\n", longMSG);
+
 	
    return message;
 }

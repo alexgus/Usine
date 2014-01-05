@@ -41,6 +41,5 @@ void com_ecrire(com message, int msgid);
 //lit le message sur la file
 com *com_lire(int msgid);
 
-
 #endif
 
