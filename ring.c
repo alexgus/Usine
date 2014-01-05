@@ -38,6 +38,7 @@ void ring_spin()
 	pthread_mutex_lock(&mutex_tourne);
 	printf("Ring : Rotation démarée\n");
 	usleep(TIME_TOURNE);
+	// TODO Rotate
 	printf("Ring : Rotation finis\n");
 	pthread_mutex_unlock(&mutex_tourne);
 }

@@ -23,17 +23,23 @@ typedef struct
 	int qte;
 } tcom;
 
+typedef struct
+{
+	long type;
+	tcom data;
+} com;
+
 //initialise une file de message
-int init();
+int com_init();
 
 //supprime la file de message
-void removeFile(int msgid);
+void com_removeFile(int msgid);
 
 //envoie le message sur la file de messages
-void ecrire(tcom message, int msgid);
+void com_ecrire(com message, int msgid);
 
 //lit le message sur la file
-tcom lire(int msgid);
+com *com_lire(int msgid);
 
 
 #endif

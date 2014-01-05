@@ -11,7 +11,7 @@ int main(void)
 	// TODO Diagramme de communication
 	// TODO Reseau de petri
 
-	int r1 = robot_init(1);
+	/*int r1 = robot_init(1);
 	object_t* o1 = getNewObject(C1);
 	
 	scheduler_init();
@@ -21,7 +21,11 @@ int main(void)
 
 	robot_stop(r1);
 	scheduler_finish();
-	ring_stop();
+	ring_stop();*/
+
+	scheduler_init(1,1,1,1);
+sleep(3);
+	scheduler_stop();
 
 	return EXIT_SUCCESS;
 }

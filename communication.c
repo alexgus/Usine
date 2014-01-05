@@ -1,5 +1,6 @@
 #include "communication.h"
-int init()
+
+int com_init()
 {
 	key_t cle;
 	int msgid;
@@ -24,38 +25,36 @@ int init()
 	return msgid;
 }
 
-void removeFile(int msgid)
+void com_removeFile(int msgid)
 {
 	msgctl(msgid, IPC_RMID,NULL);
 }
 
-void ecrire(tcom message, int msgid)
+void com_ecrire(com message, int msgid)
 {
-
-	key_t key;
+//	key_t key;
    
 	/* Envoie du message sur la file	*/
-	if (msgsnd(msgid, &message, sizeof(tcom),0) == -1) 
+	if (msgsnd(msgid, &message, sizeof(com),0) == -1) 
 	{
-		perror("Erreur d'ecriture requete \n");
+		perror("Erreur d'ecriture requete : ");
 		exit(1);
 	}
 	printf("Message envoyé\n");
 }
 
-tcom lire(int msgid)
+com *com_lire(int msgid)
 {
-
-	tcom message;
+	com *message = malloc(sizeof(com));
 	int longMSG;
 	
 	/* lecture du message sur la file */
-	if ((longMSG = msgrcv(msgid, &message, sizeof(tcom), 1, 0)) == -1) 
+	if ((longMSG = msgrcv(msgid, message, sizeof(com), 1, 0)) == -1) 
 	{
-		perror("Erreur de lecture requete \n");
+		perror("Erreur de lecture requete : ");
 		exit(1);
 	}
-	printf("Message lu\n");
+	printf("Message lu : %d\n", longMSG);
 	
    return message;
 }
