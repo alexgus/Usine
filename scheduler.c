@@ -4,25 +4,30 @@ void scheduler_init(int p1in, int p2in, int p3in, int p4in)
 {
 	int i;
 
-	etat_tapis = 1;
-	pthread_mutex_init(&etat_mutex, NULL);
-	pthread_create(&th_tapis,NULL,&scheduler_main,NULL);
-
+	// NB of objects
 	nbP1 = p1in;
 	nbP2 = p2in;
 	nbP3 = p3in;
 	nbP4 = p4in;
-
-	op = malloc(sizeof(pthread_t)*(nbP1 + nbP2 + nbP3 + nbP4));
-
+	
+	// Initialize robots
 	for(i=0; i < NB_ROBOT; i++)
 		robot_init((i * 2) + 1);
+
+	// start ring
+	ring_init();
+
+	// Start scheduler
+	etat_tapis = 1;
+	pthread_mutex_init(&etat_mutex, NULL);
+	pthread_create(&th_tapis,NULL,&scheduler_main,NULL);
 }
 
 void *scheduler_main()
 {
 	int i;
 
+	op = malloc(sizeof(pthread_t)*(nbP1 + nbP2 + nbP3 + nbP4));
 	for(i=0;i < 1 ; i++)
 		pthread_create(&op[i],NULL,&p1,NULL);
 
@@ -38,7 +43,7 @@ void *scheduler_main()
 				printf("scheduler : In work !\n");
 				break;
 		}
-		sleep(1);
+		sleep(10);
 	}
 	return 0;
 }
@@ -72,21 +77,22 @@ void scheduler_finish()
 void *p1()
 {
 // TODO	describe the process
-	tcom msg;
+	tcom *msg = malloc(sizeof(tcom));
 	com m;
-	m.type = 1;
+
+	msg->order = GET;
+	msg->qte = 3;
+	msg->obj = C1;
+
+	m.type = 1; // order
 	m.data = msg;
 
-	msg.order = GET;
-	msg.qte = 3;
-	msg.obj = C1;
-
 	com_ecrire(m, tabRobot[0].idMsg);
-	
+	/*
 	object_t o;
 	o.etat = MATERIAL;
 	o.type = C1;
-	ring_putObject(PUT,&o);
+	ring_putObject(PUT,&o);*/
 
 // com_lire(*msg, tabRobot[x]);
 

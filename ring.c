@@ -13,15 +13,10 @@ void* ring_main()
 	while(state_tourne)
 	{
 		if(nbObjectsIn > 0)
-		{
 			ring_spin();
-			sleep(TIME_WAIT);
-		}
 		else
-		{
 			printf("Pas d'objet dans le tourniquet\n");
-			sleep(1);
-		}
+		usleep(TIME_WAIT);
 	}
 	return NULL;
 }
@@ -35,13 +30,28 @@ void ring_stop()
 
 void ring_spin()
 {
+	int i = 0;
+	object_t *t;
+	
 	pthread_mutex_lock(&mutex_tourne);
-	printf("Ring : Rotation démarée\n");
-	usleep(TIME_TOURNE);
-	// TODO Rotate
-	printf("Ring : Rotation finis\n");
+	printf("Ring : Rotation\n");
+
+	t = tourne[0];
+	while(i < NBCASE)
+		tourne[i] = tourne[i+1];
+	tourne[NBCASE-1] = t;
+
 	pthread_mutex_unlock(&mutex_tourne);
 }
+
+object_t* ring_lookObject(int n)
+{
+	pthread_mutex_lock(&mutex_tourne);
+	object_t* obj = tourne[n];
+	pthread_mutex_unlock(&mutex_tourne);
+	return obj;
+}
+
 
 object_t* ring_getObject(int n)
 {

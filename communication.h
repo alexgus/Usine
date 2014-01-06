@@ -26,7 +26,7 @@ typedef struct
 typedef struct
 {
 	long type;
-	tcom data;
+	tcom* data;
 } com;
 
 //initialise une file de message

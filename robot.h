@@ -9,6 +9,7 @@
 #include "ring.h"
 
 #define NB_ROBOT 6
+#define NB_STOCK 5
 
 /**************************************
  * 			Struct Robot
@@ -18,6 +19,7 @@ typedef struct
 	int id; // Robot's id
 	int place; // Robot's place in front of the ring
 	int stock; // Robot's stock for Materials or Products
+	object_t* tabObj[NB_STOCK]; // Robot's tab
 	int state; // State of the robot -> 0 : Arret, 1 : Marche, 2 : Panne, 3 : Dégradé
 	int idMsg; // msg queue for receiving orders
 	pthread_t th;
@@ -60,7 +62,7 @@ void *robot_main(int id);
 /**
  * Wait an operation to do
  */
-int robot_waitOp(int id);
+int robot_waitOp(robot_t id);
 
 /**
  * List of operation

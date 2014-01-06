@@ -6,7 +6,7 @@ int com_init()
 	int msgid;
 
 	/*  Creation de la clé IPC */
-	 if ((cle = ftok(".", "A")) == -1) 
+	 if ((cle = ftok(".", 'A')) == -1) 
 	{
 		perror("Erreur de creation de la clé \n");
 		exit(1);
@@ -56,6 +56,7 @@ com *com_lire(int msgid)
 	}
 	printf("Message lu : %d\n", longMSG);
 
+	sleep(1);
 	
    return message;
 }

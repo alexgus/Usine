@@ -9,8 +9,7 @@
 #include "object.h"
 
 #define NBCASE			16
-#define TIME_TOURNE	100 // ms
-#define TIME_WAIT		2		// s		
+#define TIME_WAIT		200000		// microsecond
 
 object_t* tourne[NBCASE];		// Tourniquet cases
 int nbObjectsIn;					// Nb objects in the tourniquet
@@ -37,6 +36,11 @@ void ring_stop();
  * Rotate conveyor belt
  */
 void ring_spin();
+
+/**
+ * Look the object at position n
+ */
+object_t* ring_lookObject(int n);
 
 /**
  * Get objetc at position n

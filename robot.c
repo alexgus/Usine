@@ -72,50 +72,51 @@ void robot_degradeMode(int id)
 
 void *robot_main(int id)
 {
+	robot_t r = tabRobot[id];
 	while(tabRobot[id].state)
 	{
-		switch(tabRobot[id].state)
+		switch(r.state)
 		{
 			case 1:
-				printf("Robot %d en marche\n", id);
-				robot_waitOp(id);
+				printf("Robot %d en marche\n", r.id);
+				robot_waitOp(r);
 				break;
 			case 2:
-				printf("Robot %d en panne\n", id);
+				printf("Robot %d en panne\n", r.id);
 				break;
 			case 3:
-				printf("Robot %d en mode dégradé\n", id);
+				printf("Robot %d en mode dégradé\n", r.id);
 				break;
 			default:
-				printf("Robot %d : Illegal State\n",id);
+				printf("Robot %d : Illegal State\n", r.id);
 		}
 	}
 	return NULL;
 }
 
-int robot_waitOp(int id)
+int robot_waitOp(robot_t r)
 {
-	object_t *o;
-	com* t = com_lire(tabRobot[id].idMsg);
+	com* t = com_lire(r.idMsg);
+	
+	printf("--> %d\n",t->data->qte);
 
-	printf("----> %d\n", t->data.qte);
-
+/*
 	switch(t->data.order)
 	{
 		case GET:
-			while((o = ring_getObject(tabRobot[id].place))->type != t->data.obj)
-				; // TODO Suppr attente active
-			tabRobot[id].stock++;
-				// les stockers dans un tableau ?
+			while(ring_lookObject(r.place)->type != t->data.obj)
+				; // TODO Suppr attente active avec semaphore
+			r.tabObj[r.stock] = ring_getObject(r.place);
+			r.stock++;
 			break;
 		case OP:
-			robot_op(id,t->data);
+			robot_op(r.id,t->data);
 			break;
 		case LAST_OP:
-			robot_op(id,t->data);
+			robot_op(r.id,t->data);
 			// obj.etat = FINISH
 			break;
-	}
+	}*/
 
 	// return ack finish. ready for next operation
 
