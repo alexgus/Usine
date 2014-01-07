@@ -36,7 +36,10 @@ void *scheduler_main()
 		switch(etat_tapis)
 		{
 			case 0:
-				// TODO join all thread
+				for(i=0; i < NB_ROBOT; i++)
+					robot_stop(i);
+				
+				// TODO free memory
 				printf("scheduler : Not in work !\n");
 				break;
 			case 1:
@@ -53,6 +56,8 @@ void scheduler_stop()
 	pthread_mutex_lock(&etat_mutex);
 	etat_tapis = 0;
 	pthread_mutex_unlock(&etat_mutex);
+	
+	pthread_join(th_tapis,NULL);
 }
 
 void scheduler_start()
@@ -77,23 +82,38 @@ void scheduler_finish()
 void *p1()
 {
 // TODO	describe the process
-	tcom *msg = malloc(sizeof(tcom));
-	com m;
+	tcom *msg;
+	com *m;
+	object_t *o;
 
+	msg = malloc(sizeof(tcom));
 	msg->order = GET;
 	msg->qte = 3;
 	msg->obj = C1;
 
-	m.type = 1; // order
-	m.data = msg;
+	m = malloc(sizeof(com));
+	m->type = 1; // order
+	m->data = msg;
 
 	com_ecrire(m, tabRobot[0].idMsg);
-	/*
-	object_t o;
-	o.etat = MATERIAL;
-	o.type = C1;
-	ring_putObject(PUT,&o);*/
 
+	o = malloc(sizeof(object_t));
+	o->etat = MATERIAL;
+	o->type = C1;
+	while(ring_putObject(PUT,o) == NULL)
+		;
+
+	o = malloc(sizeof(object_t));
+	o->etat = MATERIAL;
+	o->type = C1;
+	while(ring_putObject(PUT,o) == NULL)
+		;
+
+	o = malloc(sizeof(object_t));
+	o->etat = MATERIAL;
+	o->type = C1;
+	while(ring_putObject(PUT,o) == NULL)
+		;
 // com_lire(*msg, tabRobot[x]);
 
 // com_ecrire(msg, tabRobot[y]);
@@ -103,6 +123,7 @@ void *p1()
 
 // Get finish product
 
+	// TODO free memory
 	return 0;
 }
 

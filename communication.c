@@ -30,7 +30,7 @@ void com_removeFile(int msgid)
 	msgctl(msgid, IPC_RMID,NULL);
 }
 
-void com_ecrire(com message, int msgid)
+void com_ecrire(com* message, int msgid)
 {
 //	key_t key;
    
@@ -55,8 +55,6 @@ com *com_lire(int msgid)
 		exit(1);
 	}
 	printf("Message lu : %d\n", longMSG);
-
-	sleep(1);
 	
    return message;
 }

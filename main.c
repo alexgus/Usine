@@ -24,7 +24,6 @@ int main(void)
 	ring_stop();*/
 
 	scheduler_init(1,1,1,1);
-sleep(3);
 	scheduler_stop();
 
 	return EXIT_SUCCESS;

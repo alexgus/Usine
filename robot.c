@@ -96,18 +96,26 @@ void *robot_main(int id)
 
 int robot_waitOp(robot_t r)
 {
+	int i = 0;
+	object_t *o;
 	com* t = com_lire(r.idMsg);
-	
-	printf("--> %d\n",t->data->qte);
+	tcom *c = t->data;
 
-/*
-	switch(t->data.order)
+	switch(t->data->order)
 	{
 		case GET:
-			while(ring_lookObject(r.place)->type != t->data.obj)
-				; // TODO Suppr attente active avec semaphore
-			r.tabObj[r.stock] = ring_getObject(r.place);
-			r.stock++;
+			while(i < t->data->qte)
+			{
+				o = ring_lookObject(r.place, t->data->obj);
+				while(o == NULL || (o != NULL && o->type != c->obj))
+					o = ring_lookObject(r.place,t->data->obj);
+					// TODO Suppr attente active avec semaphore
+
+				r.tabObj[r.stock] = ring_getObject(r.place);
+				r.stock++;
+
+				i++;
+			}
 			break;
 		case OP:
 			robot_op(r.id,t->data);
@@ -116,16 +124,35 @@ int robot_waitOp(robot_t r)
 			robot_op(r.id,t->data);
 			// obj.etat = FINISH
 			break;
-	}*/
+	}
 
 	// return ack finish. ready for next operation
 
 	return 0;
 }
 
-void robot_op(int idR, tcom op)
+object_t *robot_op(int idR, tcom *op)
 {
-	printf("Robot %d : Effectue l'operation %d sur l'objet : %d\n",idR,op.operation, op.obj);
-	// switch obj type
-	// return obj
+	printf("Robot %d : Effectue l'operation %d sur l'objet : %d\n",idR,op->operation, op->obj);
+	switch(op->obj)
+	{
+		case C1:
+			printf("Coucou\n");
+			break;
+		case C2:
+			break;
+		case C3:
+			break;
+		case C4:
+			break;
+		case P1:
+			break;
+		case P2:
+			break;
+		case P3:
+			break;
+		case P4:
+			break;
+	}
+	return NULL;
 }

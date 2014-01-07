@@ -67,6 +67,6 @@ int robot_waitOp(robot_t id);
 /**
  * List of operation
  */
-void robot_op(int idR, tcom op);
+object_t* robot_op(int idR, tcom *op);
 
 #endif

@@ -36,7 +36,7 @@ int com_init();
 void com_removeFile(int msgid);
 
 //envoie le message sur la file de messages
-void com_ecrire(com message, int msgid);
+void com_ecrire(com* message, int msgid);
 
 //lit le message sur la file
 com *com_lire(int msgid);

@@ -30,40 +30,53 @@ void ring_stop()
 
 void ring_spin()
 {
-	int i = 0;
+	int i;
 	object_t *t;
 	
 	pthread_mutex_lock(&mutex_tourne);
 	printf("Ring : Rotation\n");
 
 	t = tourne[0];
-	while(i < NBCASE)
+	for(i=0;i < NBCASE;i++)
 		tourne[i] = tourne[i+1];
 	tourne[NBCASE-1] = t;
 
 	pthread_mutex_unlock(&mutex_tourne);
 }
 
-object_t* ring_lookObject(int n)
+object_t* ring_lookObject(int n, typeObject o)
 {
 	pthread_mutex_lock(&mutex_tourne);
-	object_t* obj = tourne[n];
-	pthread_mutex_unlock(&mutex_tourne);
-	return obj;
+	if(tourne[n] != NULL && tourne[n]->type == o)
+	{
+		object_t* obj = tourne[n];
+		return obj;
+	}
+	else
+	{
+		pthread_mutex_unlock(&mutex_tourne);
+		return NULL;
+	}
 }
-
 
 object_t* ring_getObject(int n)
 {
-	pthread_mutex_lock(&mutex_tourne);
-	object_t* obj = tourne[n];
-	tourne[n] = NULL;
-	nbObjectsIn--;
-	pthread_mutex_unlock(&mutex_tourne);
-	return obj;
+	if(tourne[n] != NULL)
+	{
+		object_t* obj = tourne[n];
+		tourne[n] = NULL;
+		nbObjectsIn--;
+		pthread_mutex_unlock(&mutex_tourne);
+		return obj;
+	}
+	else
+	{
+		pthread_mutex_unlock(&mutex_tourne);
+		return NULL;
+	}
 }
 
-void ring_putObject(int n, object_t* obj)
+object_t* ring_putObject(int n, object_t* obj)
 {
 	if(tourne[n] == NULL)
 	{
@@ -71,5 +84,8 @@ void ring_putObject(int n, object_t* obj)
 		tourne[n] = obj;
 		nbObjectsIn++;
 		pthread_mutex_unlock(&mutex_tourne);
+		return obj;
 	}
+	else
+		return NULL;
 }

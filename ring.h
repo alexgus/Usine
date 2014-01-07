@@ -40,7 +40,7 @@ void ring_spin();
 /**
  * Look the object at position n
  */
-object_t* ring_lookObject(int n);
+object_t* ring_lookObject(int n, typeObject o);
 
 /**
  * Get objetc at position n
@@ -50,6 +50,6 @@ object_t* ring_getObject(int n);
 /**
  * Put objects at position n
  */
-void ring_putObject(int n, object_t* obj);
+object_t* ring_putObject(int n, object_t* obj);
 
 #endif
