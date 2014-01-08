@@ -83,37 +83,46 @@ void *p1()
 {
 // TODO	describe the process
 	tcom *msg;
-	com *m;
 	object_t *o;
 
+	// Send objects
 	msg = malloc(sizeof(tcom));
 	msg->order = GET;
 	msg->qte = 3;
+	msg->obj = C1;
+
+	com_sendOrder(tabRobot[0].idMsg, msg);
+	
+	// Put objects
+	o = malloc(sizeof(object_t));
+	o->etat = MATERIAL;
+	o->type = C1;
+	while(ring_putObject(PUT,o) == NULL)
+		;
+
+	o = malloc(sizeof(object_t));
+	o->etat = MATERIAL;
+	o->type = C1;
+	while(ring_putObject(PUT,o) == NULL)
+		;
+
+	o = malloc(sizeof(object_t));
+	o->etat = MATERIAL;
+	o->type = C1;
+	while(ring_putObject(PUT,o) == NULL)
+		;
+
+	// Send operations
+	/*msg = malloc(sizeof(tcom));
+	msg->order = OP;
+	msg->qte = 1;
 	msg->obj = C1;
 
 	m = malloc(sizeof(com));
 	m->type = 1; // order
 	m->data = msg;
 
-	com_ecrire(m, tabRobot[0].idMsg);
-
-	o = malloc(sizeof(object_t));
-	o->etat = MATERIAL;
-	o->type = C1;
-	while(ring_putObject(PUT,o) == NULL)
-		;
-
-	o = malloc(sizeof(object_t));
-	o->etat = MATERIAL;
-	o->type = C1;
-	while(ring_putObject(PUT,o) == NULL)
-		;
-
-	o = malloc(sizeof(object_t));
-	o->etat = MATERIAL;
-	o->type = C1;
-	while(ring_putObject(PUT,o) == NULL)
-		;
+	com_ecrire(m, tabRobot[0].idMsg);*/
 // com_lire(*msg, tabRobot[x]);
 
 // com_ecrire(msg, tabRobot[y]);

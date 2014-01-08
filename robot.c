@@ -16,7 +16,7 @@ int robot_init(int place)
 		tabRobot[id].place = place;
 		tabRobot[id].stock = 0;
 		tabRobot[id].state = 1; // Marche
-		tabRobot[id].idMsg = com_init();
+		tabRobot[id].idMsg = com_init(id);
 
 		pthread_mutex_init(&tabRobot[id].mutex, NULL);
 		pthread_create(&tabRobot[id].th,NULL,&robot_main,(int)id);
@@ -73,7 +73,7 @@ void robot_degradeMode(int id)
 void *robot_main(int id)
 {
 	robot_t r = tabRobot[id];
-	while(tabRobot[id].state)
+	while(r.state)
 	{
 		switch(r.state)
 		{
@@ -91,6 +91,7 @@ void *robot_main(int id)
 				printf("Robot %d : Illegal State\n", r.id);
 		}
 	}
+
 	return NULL;
 }
 
@@ -98,17 +99,16 @@ int robot_waitOp(robot_t r)
 {
 	int i = 0;
 	object_t *o;
-	com* t = com_lire(r.idMsg);
-	tcom *c = t->data;
+	tcom* t = com_getOrger(r.idMsg);
 
-	switch(t->data->order)
+	switch(t->order)
 	{
 		case GET:
-			while(i < t->data->qte)
+			while(i < t->qte)
 			{
-				o = ring_lookObject(r.place, t->data->obj);
-				while(o == NULL || (o != NULL && o->type != c->obj))
-					o = ring_lookObject(r.place,t->data->obj);
+				o = ring_lookObject(r.place, t->obj);
+				while(o == NULL || (o != NULL && o->type != t->obj))
+					o = ring_lookObject(r.place,t->obj);	
 					// TODO Suppr attente active avec semaphore
 
 				r.tabObj[r.stock] = ring_getObject(r.place);
@@ -118,10 +118,10 @@ int robot_waitOp(robot_t r)
 			}
 			break;
 		case OP:
-			robot_op(r.id,t->data);
+			robot_op(r.id,t);
 			break;
 		case LAST_OP:
-			robot_op(r.id,t->data);
+			robot_op(r.id,t);
 			// obj.etat = FINISH
 			break;
 	}
