@@ -11,7 +11,7 @@ void scheduler_init(int p1in, int p2in, int p3in, int p4in)
 	nbP4 = p4in;
 	
 	// Initialize robots
-	for(i=0; i < NB_ROBOT; i++)
+	for(i=0; i < 1; i++)
 		robot_init((i * 2) + 1);
 
 	// start ring

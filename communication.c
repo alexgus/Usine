@@ -47,7 +47,7 @@ com *com_lire(int msgid, msgType m)
 {
 	com *message = malloc(sizeof(com));
 	int longMSG;
-	
+	printf("%d\n",msgid);
 	/* lecture du message sur la file */
 	if ((longMSG = msgrcv(msgid, message, sizeof(com), m, 0)) == -1) 
 	{
@@ -55,9 +55,12 @@ com *com_lire(int msgid, msgType m)
 		exit(1);
 	}
 	printf("Message lu : %d\n", longMSG);
+////////////////////////////////////////
 printf("test : %d\n",test);
 printf("mess : %d\n",message->data);
+////////////////////////////////////////
 printf("Receive : %d %d %d\n",message->data->order, message->data->obj, message->data->qte);
+printf("Test : %d %d %d\n",test->order, test->obj, test->qte);
    return message;
 }
 
