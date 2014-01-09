@@ -25,6 +25,8 @@ void scheduler_init(int p1in, int p2in, int p3in, int p4in)
 	// Start scheduler
 	etat_tapis = 1;
 	pthread_mutex_init(&etat_mutex, NULL);
+	pthread_mutex_init(&comtex, NULL);
+	pthread_mutex_init(&mutexRobot, NULL); // TODO ...
 	pthread_create(&th_tapis,NULL,&scheduler_main,NULL);
 }
 
@@ -123,6 +125,8 @@ void stock(typeObject t, int nb, int idRobot)
 	int i = 0;
 	tcom *msg;
 	object_t *o;
+	
+	idRobot--;
 
 	// Put objects
 	while(i < nb)
@@ -144,14 +148,24 @@ void stock(typeObject t, int nb, int idRobot)
 	msg->qte = nb;
 	msg->obj = t;
 
+	pthread_mutex_lock(&comtex);
+	pthread_mutex_lock(&mutexRobot);
 	com_sendOrder(tabRobot[idRobot].idMsg, msg);
+	pthread_mutex_unlock(&mutexRobot);
+	pthread_mutex_unlock(&comtex);
 
+	pthread_mutex_lock(&comtex);
+	pthread_mutex_lock(&mutexRobot);
 	com_waitACK(tabRobot[idRobot].idMsg);
+	pthread_mutex_unlock(&mutexRobot);
+	pthread_mutex_unlock(&comtex);
 }
 
 void operation(typeObject t, oper tOp,int nb, int idRobot,int lastOp)
 {
 	tcom *msg;
+
+	idRobot--;
 
 	// Send msg
 	msg = malloc(sizeof(tcom));
@@ -163,8 +177,17 @@ void operation(typeObject t, oper tOp,int nb, int idRobot,int lastOp)
 	msg->obj = t;
 	msg->operation = tOp;
 
+	pthread_mutex_lock(&comtex);
+	pthread_mutex_lock(&mutexRobot);
 	com_sendOrder(tabRobot[idRobot].idMsg, msg);
+	pthread_mutex_unlock(&mutexRobot);
+	pthread_mutex_unlock(&comtex);
+
+	pthread_mutex_lock(&comtex);
+	pthread_mutex_lock(&mutexRobot);
 	com_waitACK(tabRobot[idRobot].idMsg);
+	pthread_mutex_unlock(&mutexRobot);
+	pthread_mutex_unlock(&comtex);
 }
 
 void *p1()

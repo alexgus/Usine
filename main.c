@@ -23,7 +23,8 @@ int main(void)
 	scheduler_finish();
 	ring_stop();*/
 
-	scheduler_init(10,15,12,8);
+//	scheduler_init(10,15,12,8);
+	scheduler_init(1,1,1,2);
 	scheduler_wait();
 
 	return EXIT_SUCCESS;

@@ -27,6 +27,11 @@ typedef struct
 } robot_t;
 
 /**
+ * Wait for accesing robot tabs
+ */
+pthread_mutex_t mutexRobot;
+
+/**
  * Table for stocking information about robots
  */
 robot_t tabRobot[NB_ROBOT];

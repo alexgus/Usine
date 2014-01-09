@@ -9,7 +9,7 @@
 #include "object.h"
 
 #define NBCASE			16
-#define TIME_WAIT		20		// microsecond
+#define TIME_WAIT		20000		// microsecond
 
 object_t* tourne[NBCASE];		// Tourniquet cases
 int nbObjectsIn;					// Nb objects in the tourniquet

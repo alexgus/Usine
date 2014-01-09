@@ -5,7 +5,6 @@
  */
 int nbRobot = 0;
 
-
 int robot_init(int place)
 {
 	if(nbRobot < NB_ROBOT)
@@ -78,18 +77,18 @@ void *robot_main(int id)
 		switch(r.state)
 		{
 			case 1:
-				printf("Robot %d en marche\n", r.id);
+				printf("Robot %d en marche\n", r.id+1);
 				robot_waitOp(r);
 				break;
 			case 2:
-				printf("Robot %d en panne\n", r.id);
+				printf("Robot %d en panne\n", r.id+1);
 				exit(0);
 				break;
 			case 3:
-				printf("Robot %d en mode dégradé\n", r.id);
+				printf("Robot %d en mode dégradé\n", r.id+1);
 				break;
 			default:
-				printf("Robot %d : Illegal State\n", r.id);
+				printf("Robot %d : Illegal State\n", r.id+1);
 		}
 	}
 
@@ -136,7 +135,7 @@ int robot_waitOp(robot_t r)
 object_t *robot_op(robot_t r, tcom *op)
 {
 	object_t* o = NULL;
-	printf("Robot %d : Effectue l'operation %d sur l'objet : %d\n",r.id,op->operation+1, op->obj);
+	printf("Robot %d : Effectue l'operation %d sur un objet %d\n",r.id+1,op->operation+1, op->obj);
 
 	switch(op->obj)
 	{

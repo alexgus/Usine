@@ -38,21 +38,18 @@ void com_ecrire(com* message, int msgid)
 		perror("Erreur d'ecriture requete : ");
 		exit(1);
 	}
-	//printf("Message envoyé\n");
 }
 
 com *com_lire(int msgid, msgType m)
 {
 	com *message = malloc(sizeof(com));
 	int longMSG;
-	
 	/* lecture du message sur la file */
 	if ((longMSG = msgrcv(msgid, message, sizeof(com) - sizeof(long), m+1, 0)) == -1) 
 	{
 		perror("Erreur de lecture requete : ");
 		exit(1);
 	}
-	//printf("Message lu : %d\n", longMSG);
    return message;
 }
 

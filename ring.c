@@ -14,7 +14,6 @@ void* ring_main()
 	{
 		if(nbObjectsIn > 0)
 			ring_spin();
-//		usleep(TIME_WAIT);
 	}
 	return NULL;
 }
@@ -75,16 +74,19 @@ object_t* ring_getObject(int n)
 
 object_t* ring_putObject(int n, object_t* obj)
 {
-	if(tourne[n] == NULL)
+	pthread_mutex_lock(&mutex_tourne);
+	if(tourne[n] == NULL && nbObjectsIn < NBCASE)
 	{
-		pthread_mutex_lock(&mutex_tourne);
 		tourne[n] = obj;
 		nbObjectsIn++;
 		pthread_mutex_unlock(&mutex_tourne);
 		return obj;
 	}
 	else
+	{
+		pthread_mutex_unlock(&mutex_tourne);
 		return NULL;
+	}
 }
 
 object_t* ring_lookFinish(int n)
