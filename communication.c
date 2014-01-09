@@ -31,7 +31,6 @@ void com_removeFile(int msgid)
 
 void com_ecrire(com* message, int msgid)
 {
-//	key_t key;
 	message->type += 1;
 	/* Envoie du message sur la file	*/
 	if (msgsnd(msgid, message, sizeof(com) - sizeof(long),0) == -1) 

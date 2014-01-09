@@ -9,7 +9,7 @@
 #include "object.h"
 
 #define NBCASE			16
-#define TIME_WAIT		200000		// microsecond
+#define TIME_WAIT		20		// microsecond
 
 object_t* tourne[NBCASE];		// Tourniquet cases
 int nbObjectsIn;					// Nb objects in the tourniquet
@@ -51,5 +51,10 @@ object_t* ring_getObject(int n);
  * Put objects at position n
  */
 object_t* ring_putObject(int n, object_t* obj);
+
+/**
+ * Look for finish products
+ */
+object_t* ring_lookFinish(int n);
 
 #endif

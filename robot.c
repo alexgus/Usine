@@ -83,6 +83,7 @@ void *robot_main(int id)
 				break;
 			case 2:
 				printf("Robot %d en panne\n", r.id);
+				exit(0);
 				break;
 			case 3:
 				printf("Robot %d en mode dégradé\n", r.id);
@@ -117,21 +118,25 @@ int robot_waitOp(robot_t r)
 			}
 			break;
 		case OP:
-			robot_op(r.id,t);
+			o = robot_op(r,t);
+			while(ring_putObject(r.place,o) == NULL)
+				; // TODO Suppr attente active
 			break;
 		case LAST_OP:
-			robot_op(r.id,t);
-			// obj.etat = FINISH
+			o = robot_op(r,t);
+			o->etat = FINISH;
+			while(ring_putObject(r.place,o) == NULL)
+				; // TODO Suppr attente active
 			break;
 	}
 	com_sendACK(r.idMsg);
 	return 0;
 }
 
-object_t *robot_op(int idR, tcom *op)
+object_t *robot_op(robot_t r, tcom *op)
 {
 	object_t* o = NULL;
-	printf("Robot %d : Effectue l'operation %d sur l'objet : %d\n",idR,op->operation+1, op->obj);
+	printf("Robot %d : Effectue l'operation %d sur l'objet : %d\n",r.id,op->operation+1, op->obj);
 
 	switch(op->obj)
 	{
@@ -160,5 +165,6 @@ object_t *robot_op(int idR, tcom *op)
 			o = getNewObject(P4);
 			break;
 	}
+	
 	return o;
 }
