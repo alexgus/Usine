@@ -11,7 +11,7 @@ void scheduler_init(int p1in, int p2in, int p3in, int p4in)
 	nbP4 = p4in;
 	
 	// Initialize robots
-	for(i=0; i < 1; i++)
+	for(i=0; i < NB_ROBOT; i++)
 		robot_init((i * 2) + 1);
 
 	// start ring
@@ -79,60 +79,56 @@ void scheduler_finish()
 		pthread_join(op[i],NULL);
 }
 
-void *p1()
+void stock(typeObject t, int nb, int idRobot)
 {
-// TODO	describe the process
+	int i = 0;
 	tcom *msg;
 	object_t *o;
 
-	// Send objects
+	// Send msg
 	msg = malloc(sizeof(tcom));
 	msg->order = GET;
-	msg->qte = 3;
-	msg->obj = C1;
+	msg->qte = nb;
+	msg->obj = t;
 
-	com_sendOrder(tabRobot[0].idMsg, msg);
-	
+	com_sendOrder(tabRobot[idRobot].idMsg, msg);
+
 	// Put objects
-	o = malloc(sizeof(object_t));
-	o->etat = MATERIAL;
-	o->type = C1;
-	while(ring_putObject(PUT,o) == NULL)
-		;
+	while(i < nb)
+	{
+		o = malloc(sizeof(object_t));
+		o->type = t;
+		if(isMaterial(*o))
+			o->etat = MATERIAL;
+		else
+			o->etat = PRODUCT;
+		while(ring_putObject(PUT,o) == NULL)
+			; // TODO Suppr attente active
+		i++;
+	}
+	com_waitACK(tabRobot[idRobot].idMsg);
+}
 
-	o = malloc(sizeof(object_t));
-	o->etat = MATERIAL;
-	o->type = C1;
-	while(ring_putObject(PUT,o) == NULL)
-		;
+void operation(typeObject t, oper tOp,int nb, int idRobot)
+{
+	tcom *msg;
 
-	o = malloc(sizeof(object_t));
-	o->etat = MATERIAL;
-	o->type = C1;
-	while(ring_putObject(PUT,o) == NULL)
-		;
-
-	// Send operations
-	/*msg = malloc(sizeof(tcom));
+	// Send msg
+	msg = malloc(sizeof(tcom));
 	msg->order = OP;
-	msg->qte = 1;
-	msg->obj = C1;
+	msg->qte = nb;
+	msg->obj = t;
+	msg->operation = tOp;
 
-	m = malloc(sizeof(com));
-	m->type = 1; // order
-	m->data = msg;
+	com_sendOrder(tabRobot[idRobot].idMsg, msg);
+	com_waitACK(tabRobot[idRobot].idMsg);
+}
 
-	com_ecrire(m, tabRobot[0].idMsg);*/
-// com_lire(*msg, tabRobot[x]);
-
-// com_ecrire(msg, tabRobot[y]);
-// do action
-// com_lire(*msg, tabRobot[y]);
-// etc..
-
-// Get finish product
-
-	// TODO free memory
+void *p1()
+{
+// TODO	describe the process
+	stock(C3,3,2);
+	operation(C3,OP1,3,2);
 	return 0;
 }
 

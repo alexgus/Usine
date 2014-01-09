@@ -50,6 +50,15 @@ void scheduler_start();
  */
 void scheduler_finish();
 
+/**
+ * Ask robot to stock product
+ */
+void stock(typeObject t, int nb, int idRobot);
+
+/**
+ * Ask Robot to do op on object
+ */
+void operation(typeObject t, oper tOp,int nb, int idRobot);
 
 // products
 void* p1();

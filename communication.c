@@ -1,12 +1,12 @@
 #include "communication.h"
 
-int com_init()
+int com_init(int id)
 {
 	key_t cle;
 	int msgid;
 
 	/*  Creation de la clé IPC */
-	 if ((cle = ftok(".", 'A')) == -1) 
+	 if ((cle = ftok(".", id)) == -1) 
 	{
 		perror("Erreur de creation de la clé \n");
 		exit(1);
@@ -32,7 +32,6 @@ void com_removeFile(int msgid)
 void com_ecrire(com* message, int msgid)
 {
 //	key_t key;
-   printf("Send : %d %d %d\n", message->data->order, message->data->obj, message->data->qte);
 	message->type += 1;
 	/* Envoie du message sur la file	*/
 	if (msgsnd(msgid, message, sizeof(com) - sizeof(long),0) == -1) 
@@ -40,7 +39,7 @@ void com_ecrire(com* message, int msgid)
 		perror("Erreur d'ecriture requete : ");
 		exit(1);
 	}
-	printf("Message envoyé\n");
+	//printf("Message envoyé\n");
 }
 
 com *com_lire(int msgid, msgType m)
@@ -54,9 +53,7 @@ com *com_lire(int msgid, msgType m)
 		perror("Erreur de lecture requete : ");
 		exit(1);
 	}
-	printf("Message lu : %d\n", longMSG);
-
-	printf("Receive : %d %d %d\n",message->data->order, message->data->obj, message->data->qte);
+	//printf("Message lu : %d\n", longMSG);
    return message;
 }
 

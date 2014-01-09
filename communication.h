@@ -33,7 +33,7 @@ typedef struct
 tcom* test;
 
 //initialise une file de message
-int com_init();
+int com_init(int id);
 
 //supprime la file de message
 void com_removeFile(int msgid);

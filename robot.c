@@ -113,7 +113,6 @@ int robot_waitOp(robot_t r)
 
 				r.tabObj[r.stock] = ring_getObject(r.place);
 				r.stock++;
-
 				i++;
 			}
 			break;
@@ -125,34 +124,41 @@ int robot_waitOp(robot_t r)
 			// obj.etat = FINISH
 			break;
 	}
-
-	// return ack finish. ready for next operation
-
+	com_sendACK(r.idMsg);
 	return 0;
 }
 
 object_t *robot_op(int idR, tcom *op)
 {
-	printf("Robot %d : Effectue l'operation %d sur l'objet : %d\n",idR,op->operation, op->obj);
+	object_t* o = NULL;
+	printf("Robot %d : Effectue l'operation %d sur l'objet : %d\n",idR,op->operation+1, op->obj);
+
 	switch(op->obj)
 	{
 		case C1:
-			printf("Coucou\n");
+			o = getNewObject(P1);
 			break;
 		case C2:
+			o = getNewObject(P2);
 			break;
 		case C3:
+			o = getNewObject(P3);
 			break;
 		case C4:
+			o = getNewObject(P4);
 			break;
 		case P1:
+			o = getNewObject(P1);
 			break;
 		case P2:
+			o = getNewObject(P2);
 			break;
 		case P3:
+			o = getNewObject(P3);
 			break;
 		case P4:
+			o = getNewObject(P4);
 			break;
 	}
-	return NULL;
+	return o;
 }
