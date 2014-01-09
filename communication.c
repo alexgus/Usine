@@ -33,9 +33,9 @@ void com_ecrire(com* message, int msgid)
 {
 //	key_t key;
    printf("Send : %d %d %d\n", message->data->order, message->data->obj, message->data->qte);
-	test = message->data;
+	message->type += 1;
 	/* Envoie du message sur la file	*/
-	if (msgsnd(msgid, &message, sizeof(com),0) == -1) 
+	if (msgsnd(msgid, message, sizeof(com) - sizeof(long),0) == -1) 
 	{
 		perror("Erreur d'ecriture requete : ");
 		exit(1);
@@ -47,20 +47,16 @@ com *com_lire(int msgid, msgType m)
 {
 	com *message = malloc(sizeof(com));
 	int longMSG;
-	printf("%d\n",msgid);
+	
 	/* lecture du message sur la file */
-	if ((longMSG = msgrcv(msgid, message, sizeof(com), m, 0)) == -1) 
+	if ((longMSG = msgrcv(msgid, message, sizeof(com) - sizeof(long), m+1, 0)) == -1) 
 	{
 		perror("Erreur de lecture requete : ");
 		exit(1);
 	}
 	printf("Message lu : %d\n", longMSG);
-////////////////////////////////////////
-printf("test : %d\n",test);
-printf("mess : %d\n",message->data);
-////////////////////////////////////////
-printf("Receive : %d %d %d\n",message->data->order, message->data->obj, message->data->qte);
-printf("Test : %d %d %d\n",test->order, test->obj, test->qte);
+
+	printf("Receive : %d %d %d\n",message->data->order, message->data->obj, message->data->qte);
    return message;
 }
 
