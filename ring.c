@@ -17,17 +17,6 @@ void* ring_main()
 	{
 		if(nbObjectsIn > 0)
 			ring_spin();
-		usleep(1000);
-	printf("OBJ : %d\n"
-					"\tMATERIAL : %d\n"
-					"\tPRODUCT  : %d\n"
-					"\tFINISH   : %d\n",nbObjectsIn,nbMATERIAL,nbPRODUCT,nbFINISH);
-		int i;
-		for(i=0; i < NBCASE; i++)
-		{
-			if(tourne[i] != NULL)
-				printf("%d\n",tourne[i]->type);
-		}
 	}
 	return NULL;
 }

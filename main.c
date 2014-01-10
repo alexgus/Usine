@@ -37,7 +37,7 @@ int main(void)
 {
 	signal(SIGINT,interupt);
 
-	scheduler_init(100,105,102,80);
+	scheduler_init(10,15,12,8);
 	scheduler_wait();
 
 	return EXIT_SUCCESS;

@@ -124,8 +124,6 @@ int robot_waitOp(robot_t r)
 				while(o == NULL || (o != NULL && o->type != t->obj))
 				{
 					o = ring_lookObject(r.place,t->obj);	
-					if(o != NULL)
-						printf("%d\n",t->obj);
 				}
 					// TODO Suppr attente active avec semaphore
 
