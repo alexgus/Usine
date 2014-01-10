@@ -3,6 +3,9 @@
 void ring_init()
 {
 	nbObjectsIn = 0;
+	nbMATERIAL = 0;
+	nbPRODUCT = 0;
+	nbFINISH = 0;
 	state_tourne = 1;
 	pthread_create(&th_tourne, NULL, &ring_main, NULL);
 	pthread_mutex_init(&mutex_tourne, NULL);
@@ -14,6 +17,17 @@ void* ring_main()
 	{
 		if(nbObjectsIn > 0)
 			ring_spin();
+		usleep(1000);
+	printf("OBJ : %d\n"
+					"\tMATERIAL : %d\n"
+					"\tPRODUCT  : %d\n"
+					"\tFINISH   : %d\n",nbObjectsIn,nbMATERIAL,nbPRODUCT,nbFINISH);
+		int i;
+		for(i=0; i < NBCASE; i++)
+		{
+			if(tourne[i] != NULL)
+				printf("%d\n",tourne[i]->type);
+		}
 	}
 	return NULL;
 }
@@ -31,7 +45,7 @@ void ring_spin()
 	object_t *t;
 	
 	pthread_mutex_lock(&mutex_tourne);
-
+	
 	t = tourne[0];
 	for(i=0;i < NBCASE;i++)
 		tourne[i] = tourne[i+1];
@@ -62,6 +76,19 @@ object_t* ring_getObject(int n)
 		object_t* obj = tourne[n];
 		tourne[n] = NULL;
 		nbObjectsIn--;
+		
+		switch(obj->etat)
+		{
+			case MATERIAL:
+				nbMATERIAL--;
+				break;
+			case PRODUCT:
+				nbPRODUCT--;
+				break;
+			case FINISH:
+				nbFINISH--;
+				break;
+		}
 		pthread_mutex_unlock(&mutex_tourne);
 		return obj;
 	}
@@ -75,10 +102,27 @@ object_t* ring_getObject(int n)
 object_t* ring_putObject(int n, object_t* obj)
 {
 	pthread_mutex_lock(&mutex_tourne);
-	if(tourne[n] == NULL && nbObjectsIn < NBCASE)
+	if(tourne[n] == NULL && nbObjectsIn < NBCASE && nbMATERIAL < 9 && obj->etat == MATERIAL)
 	{
 		tourne[n] = obj;
 		nbObjectsIn++;
+		nbMATERIAL++;
+		pthread_mutex_unlock(&mutex_tourne);
+		return obj;
+	}
+	else if(tourne[n] == NULL && nbObjectsIn < NBCASE && nbPRODUCT < 5 && obj->etat == PRODUCT)
+	{
+		tourne[n] = obj;
+		nbObjectsIn++;
+		nbPRODUCT++;
+		pthread_mutex_unlock(&mutex_tourne);
+		return obj;
+	}
+	else if(tourne[n] == NULL && nbObjectsIn < NBCASE && nbFINISH < 1 && obj->etat == FINISH)
+	{
+		tourne[n] = obj;
+		nbObjectsIn++;
+		nbFINISH++;
 		pthread_mutex_unlock(&mutex_tourne);
 		return obj;
 	}
@@ -87,6 +131,8 @@ object_t* ring_putObject(int n, object_t* obj)
 		pthread_mutex_unlock(&mutex_tourne);
 		return NULL;
 	}
+	pthread_mutex_unlock(&mutex_tourne);
+	return NULL;
 }
 
 object_t* ring_lookFinish(int n)
@@ -99,6 +145,7 @@ object_t* ring_lookFinish(int n)
 		{
 			tourne[n] = NULL;
 			nbObjectsIn--;
+			nbFINISH--;
 			pthread_mutex_unlock(&mutex_tourne);
 			return obj;
 		}

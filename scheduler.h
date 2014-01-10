@@ -13,7 +13,7 @@
 
 pthread_t th_tapis; 				// Thread tapis
 pthread_mutex_t etat_mutex;	// Mutex etat tapis
-pthread_mutex_t comtex;
+pthread_mutex_t order_mutex;
 
 int nbP1,nbP2,nbP3,nbP4;
 int nbP1f,nbP2f,nbP3f,nbP4f;

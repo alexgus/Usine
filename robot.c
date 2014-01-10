@@ -35,7 +35,8 @@ void robot_stop(int id)
 		tabRobot[id].state = 0;
 		pthread_mutex_unlock(&tabRobot[id].mutex);
 
-		pthread_join(tabRobot[id].th,NULL);
+		pthread_kill(tabRobot[id].th, SIGTERM);
+		com_removeFile(tabRobot[id].idMsg);
 	}
 }
 
@@ -77,7 +78,7 @@ void *robot_main(int id)
 		switch(r.state)
 		{
 			case 1:
-				printf("Robot %d en marche\n", r.id+1);
+				//printf("Robot %d en marche\n", r.id+1);
 				robot_waitOp(r);
 				break;
 			case 2:
@@ -117,13 +118,38 @@ int robot_waitOp(robot_t r)
 			}
 			break;
 		case OP:
+			if(t->obj != C1 && t->obj != C2 && t->obj != C3 && t->obj != C4)
+			{
+				o = ring_lookObject(r.place, t->obj);
+				while(o == NULL || (o != NULL && o->type != t->obj))
+				{
+					o = ring_lookObject(r.place,t->obj);	
+					if(o != NULL)
+						printf("%d\n",t->obj);
+				}
+					// TODO Suppr attente active avec semaphore
+
+				r.tabObj[r.stock] = ring_getObject(r.place);
+				r.stock++;
+			}
+
 			o = robot_op(r,t);
+
 			while(ring_putObject(r.place,o) == NULL)
 				; // TODO Suppr attente active
 			break;
 		case LAST_OP:
+			o = ring_lookObject(r.place, t->obj);
+			while(o == NULL || (o != NULL && o->type != t->obj))
+				o = ring_lookObject(r.place,t->obj);	
+				// TODO Suppr attente active avec semaphore
+
+			r.tabObj[r.stock] = ring_getObject(r.place);
+			r.stock++;
+
 			o = robot_op(r,t);
 			o->etat = FINISH;
+
 			while(ring_putObject(r.place,o) == NULL)
 				; // TODO Suppr attente active
 			break;
@@ -135,7 +161,7 @@ int robot_waitOp(robot_t r)
 object_t *robot_op(robot_t r, tcom *op)
 {
 	object_t* o = NULL;
-	printf("Robot %d : Effectue l'operation %d sur un objet %d\n",r.id+1,op->operation+1, op->obj);
+//	printf("Robot %d : Effectue l'operation %d sur un objet %d\n",r.id+1,op->operation+1, op->obj);
 
 	switch(op->obj)
 	{
@@ -164,6 +190,6 @@ object_t *robot_op(robot_t r, tcom *op)
 			o = getNewObject(P4);
 			break;
 	}
-	
+	r.stock = 0;
 	return o;
 }

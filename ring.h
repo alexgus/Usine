@@ -13,6 +13,7 @@
 
 object_t* tourne[NBCASE];		// Tourniquet cases
 int nbObjectsIn;					// Nb objects in the tourniquet
+int nbMATERIAL,nbPRODUCT,nbFINISH;
 int state_tourne;					// State of the ring : 0 -> Stop | 1 -> in work 
 pthread_t th_tourne;				// Thread tourniquet
 pthread_mutex_t mutex_tourne;	// Mutex tourniquet

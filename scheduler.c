@@ -25,27 +25,24 @@ void scheduler_init(int p1in, int p2in, int p3in, int p4in)
 	// Start scheduler
 	etat_tapis = 1;
 	pthread_mutex_init(&etat_mutex, NULL);
-	pthread_mutex_init(&comtex, NULL);
-	pthread_mutex_init(&mutexRobot, NULL); // TODO ...
+	pthread_mutex_init(&order_mutex, NULL);
 	pthread_create(&th_tapis,NULL,&scheduler_main,NULL);
 }
 
 void *scheduler_main()
 {
 	int i;
+	int cont = 1;
 	object_t* o;
 
 	op = malloc(sizeof(pthread_t)*(nbP1 + nbP2 + nbP3 + nbP4));
-	for(i=0;i < nbP1 ; i++)
-		pthread_create(&op[i],NULL,&p1,NULL);
-	for(i=0;i < nbP2 ; i++)
-		pthread_create(&op[i],NULL,&p2,NULL);
-	for(i=0;i < nbP3 ; i++)
-		pthread_create(&op[i],NULL,&p3,NULL);
-	for(i=0;i < nbP4 ; i++)
-		pthread_create(&op[i],NULL,&p4,NULL);
 
-	while(etat_tapis != 2)
+	pthread_create(&op[0],NULL,&p1,NULL);
+	pthread_create(&op[1],NULL,&p2,NULL);
+	pthread_create(&op[2],NULL,&p3,NULL);
+	pthread_create(&op[2],NULL,&p4,NULL);
+
+	while(etat_tapis != 2 && cont)
 	{
 		switch(etat_tapis)
 		{
@@ -59,20 +56,30 @@ void *scheduler_main()
 			case 1:
 				while((o = ring_lookFinish(TAKE)) == NULL)
 					; // TODO Suppr attente active
-				
+
 				switch(o->type)
 				{	
 					case P1:
 						nbP1f++;
+						if(nbP1f < nbP1)
+							pthread_create(&op[i],NULL,&p1,NULL);
 						break;
 					case P2:
 						nbP2f++;
+						if(nbP2f < nbP2)
+							pthread_create(&op[i],NULL,&p2,NULL);
 						break;
 					case P3:
 						nbP3f++;
+						if(nbP3f < nbP3)
+							pthread_create(&op[i],NULL,&p3,NULL);
 						break;
 					case P4:
 						nbP4f++;
+						if(nbP4f < nbP4)
+							pthread_create(&op[i],NULL,&p4,NULL);
+						break;	
+					default:
 						break;
 				}
 				printf("Nombre de produit finis :\n"
@@ -81,9 +88,13 @@ void *scheduler_main()
 							"\tP3 : %d/%d\n"
 							"\tP4 : %d/%d\n",
 							nbP1f,nbP1,nbP2f,nbP2,nbP3f,nbP3,nbP4f,nbP4);
+				if((nbP1f+nbP2f+nbP3f+nbP4f) == (nbP1+nbP2+nbP3+nbP4))
+					cont = 0;
 				break;
 		}
 	}
+	for(i=0; i < NB_ROBOT; i++)
+		robot_stop(i);
 	return 0;
 }
 
@@ -128,6 +139,8 @@ void stock(typeObject t, int nb, int idRobot)
 	
 	idRobot--;
 
+	pthread_mutex_lock(&order_mutex);
+
 	// Put objects
 	while(i < nb)
 	{
@@ -142,23 +155,17 @@ void stock(typeObject t, int nb, int idRobot)
 		i++;
 	}
 
+	pthread_mutex_unlock(&order_mutex);
+
 	// Send msg
 	msg = malloc(sizeof(tcom));
 	msg->order = GET;
 	msg->qte = nb;
 	msg->obj = t;
 
-	pthread_mutex_lock(&comtex);
-	pthread_mutex_lock(&mutexRobot);
 	com_sendOrder(tabRobot[idRobot].idMsg, msg);
-	pthread_mutex_unlock(&mutexRobot);
-	pthread_mutex_unlock(&comtex);
 
-	pthread_mutex_lock(&comtex);
-	pthread_mutex_lock(&mutexRobot);
 	com_waitACK(tabRobot[idRobot].idMsg);
-	pthread_mutex_unlock(&mutexRobot);
-	pthread_mutex_unlock(&comtex);
 }
 
 void operation(typeObject t, oper tOp,int nb, int idRobot,int lastOp)
@@ -177,23 +184,15 @@ void operation(typeObject t, oper tOp,int nb, int idRobot,int lastOp)
 	msg->obj = t;
 	msg->operation = tOp;
 
-	pthread_mutex_lock(&comtex);
-	pthread_mutex_lock(&mutexRobot);
 	com_sendOrder(tabRobot[idRobot].idMsg, msg);
-	pthread_mutex_unlock(&mutexRobot);
-	pthread_mutex_unlock(&comtex);
 
-	pthread_mutex_lock(&comtex);
-	pthread_mutex_lock(&mutexRobot);
 	com_waitACK(tabRobot[idRobot].idMsg);
-	pthread_mutex_unlock(&mutexRobot);
-	pthread_mutex_unlock(&comtex);
 }
 
 void *p1()
 {
 	stock(C1,3,1);
-	operation(C1,OP1,3,1,0);
+	operation(C1,OP1,3,1,0);	
 	operation(P1,OP2,1,2,0);
 	operation(P1,OP3,1,3,0);
 	operation(P1,OP5,1,5,1); // Final

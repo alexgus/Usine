@@ -1,30 +1,43 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <signal.h>
 #include "robot.h"
 #include "scheduler.h"
 #include "ring.h"
 #include "object.h"
 
+
+void interupt(int id)
+{
+	int i;
+	printf("Que voulez vous faire :\n"
+		"\t	1) Quitter\n"
+		"\t	2) Mode degrade\n"
+		"\t	3) Ne rien faire\n"
+		"\nChoix : ");
+	scanf("%d",&i);
+	printf("\n");
+	switch(i)
+	{
+		case 1:
+			exit(0);
+			break;
+		case 2:
+			printf("\n\n--- Mode dégradé\n"
+						"Quel robot tombe en panne [1-6] : ");
+			scanf("%d",&i);
+			printf("\nLe robot %d est alors en panne\n",i);
+			break;
+		case 3:
+			break;
+	}
+}
+
 int main(void)
 {
-	// TODO Construct 10,p1;15,p2;12,p3;8,p4
-	// TODO Diagramme de communication
-	// TODO Reseau de petri
+	signal(SIGINT,interupt);
 
-	/*int r1 = robot_init(1);
-	object_t* o1 = getNewObject(C1);
-	
-	scheduler_init();
-	ring_init();
-
-	sleep(3);
-
-	robot_stop(r1);
-	scheduler_finish();
-	ring_stop();*/
-
-//	scheduler_init(10,15,12,8);
-	scheduler_init(1,1,1,2);
+	scheduler_init(100,105,102,80);
 	scheduler_wait();
 
 	return EXIT_SUCCESS;

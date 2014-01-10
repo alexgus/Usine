@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <pthread.h>
 #include <unistd.h>
+#include <signal.h>
 #include "object.h"
 #include "communication.h"
 #include "ring.h"
